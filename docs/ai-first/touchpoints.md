@@ -52,18 +52,18 @@ Next step: prototype with cached prompts.
 Users contact support for basic order status and FAQ answers can be automated
 
 **Happy path:**  
-1. User opens support chat.  
-2. Types question (most likely about his order).  
-3. Cache checked for common answers.
-4. If not cached, assistant retrieves FAQ or order-status API.  
-5. Model generates grounded answer.  
-6. If confident, response shown.  
-7. If low confidence, escalate to human agent.  
+1. User opens support chat
+2. Types question (most likely about his order)
+3. Cache checked for common answer
+4. If not cached, assistant retrieves FAQ or order-status API
+5. Model generates grounded answer
+6. If confident, response shown
+7. If low confidence, escalate to human agent
 8. User gets final answer as fast as possible
 
 **Grounding & guardrails:**  
-- Sources: FAQ markdown + order-status API.  
-- Max context: 2k tokens.  
+- Sources: FAQ markdown + order-status API
+- Max context: 2k tokens
 - Refuse if question is outside scope.  
 
 **Human-in-the-loop:**  
@@ -78,7 +78,7 @@ Users contact support for basic order status and FAQ answers can be automated
 - Total: 1200 ms  
 
 **Error & fallback:**  
-- If model fails → “Please hold, connecting you to an agent.”  
+- If model fails, inform the user: “Please hold, connecting you to an agent.”  
 
 **PII:**  
 - Only order ID passes to backend API.  
@@ -90,4 +90,5 @@ Users contact support for basic order status and FAQ answers can be automated
 - Business: lower contact rate per 1k sessions  
 
 **Feasibility:**  
-FAQ already in markdown, order-status API exists. GPT-4o-mini or Llama 3.1 would work. Next step: wire up retrieval prototype.  
+FAQ already in markdown, order-status API exists. GPT-4o-mini or Llama 3.1 would work but Llama
+Next step: wire up retrieval prototype.  
