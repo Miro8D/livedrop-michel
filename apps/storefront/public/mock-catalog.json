@@ -1,0 +1,193 @@
+[
+    {
+      "id": "P1001",
+      "title": "Wireless Headphones",
+      "price": 79.99,
+      "image": "/images/headphones.jpg",
+      "tags": ["audio", "wireless", "electronics"],
+      "stockQty": 42,
+      "description": "Comfortable over-ear wireless headphones with deep bass, noise isolation, and up to 20 hours of battery life.",
+      "imageURL": "https://images.unsplash.com/photo-1684703147716-014da6a31aa3?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1074"
+    },
+    {
+      "id": "P1002",
+      "title": "Bluetooth Speaker",
+      "price": 59.99,
+      "image": "/images/speaker.jpg",
+      "tags": ["audio", "portable"],
+      "stockQty": 36,
+      "description": "Portable Bluetooth speaker with rich 360° sound, splash resistance, and a 10-hour rechargeable battery.",
+      "imageURL": "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1331"
+    },
+    {
+      "id": "P1003",
+      "title": "Smartwatch Series 5",
+      "price": 199.99,
+      "image": "/images/smartwatch.jpg",
+      "tags": ["wearables", "electronics"],
+      "stockQty": 27,
+      "description": "Feature-packed smartwatch with fitness tracking, heart-rate monitoring, and smartphone notifications.",
+      "imageURL": "https://images.unsplash.com/photo-1617043786394-f977fa12eddf?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170"
+    },
+    {
+      "id": "P1004",
+      "title": "Laptop Stand",
+      "price": 24.99,
+      "image": "/images/laptop-stand.jpg",
+      "tags": ["accessories", "office"],
+      "stockQty": 58,
+      "description": "Aluminum adjustable laptop stand designed to improve posture and airflow for your laptop.",
+      "imageURL": "https://plus.unsplash.com/premium_photo-1683736986821-e4662912a70d?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1029"
+    },
+    {
+      "id": "P1005",
+      "title": "USB-C Charging Cable",
+      "price": 9.99,
+      "image": "/images/usb-c-cable.jpg",
+      "tags": ["accessories", "charging"],
+      "stockQty": 120,
+      "description": "Durable USB-C to USB-A charging cable supporting fast charge and high-speed data transfer.",
+      "imageURL": "https://plus.unsplash.com/premium_photo-1669261149433-febd56c05327?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=715"
+    },
+    {
+      "id": "P1006",
+      "title": "Mechanical Keyboard",
+      "price": 89.99,
+      "image": "/images/keyboard.jpg",
+      "tags": ["office", "electronics"],
+      "stockQty": 44,
+      "description": "RGB-backlit mechanical keyboard with tactile switches and full anti-ghosting for smooth typing.",
+      "imageURL": "https://images.unsplash.com/photo-1602025882379-e01cf08baa51?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170"
+    },
+    {
+      "id": "P1007",
+      "title": "Ergonomic Mouse",
+      "price": 39.99,
+      "image": "/images/mouse.jpg",
+      "tags": ["office", "accessories"],
+      "stockQty": 71,
+      "description": "Ergonomic wireless mouse designed to reduce wrist strain and support all-day productivity.",
+      "imageURL": "https://images.unsplash.com/photo-1625750319971-ee4b61e68df8?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1229"
+    },
+    {
+      "id": "P1008",
+      "title": "4K Monitor 27-inch",
+      "price": 329.99,
+      "image": "/images/monitor.jpg",
+      "tags": ["electronics", "display"],
+      "stockQty": 16,
+      "description": "Ultra HD 4K 27-inch display with vivid colors, slim bezels, and adaptive brightness for work or play.",
+      "imageURL": "https://images.unsplash.com/photo-1666771410003-8437c4781d49?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1074"
+    },
+    {
+      "id": "P1009",
+      "title": "Desk Lamp with USB Port",
+      "price": 29.99,
+      "image": "/images/lamp.jpg",
+      "tags": ["office", "lighting"],
+      "stockQty": 63,
+      "description": "Modern LED desk lamp with adjustable brightness levels and built-in USB charging port.",
+      "imageURL": "https://images.unsplash.com/photo-1571406487954-dc11b0c0767d?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687"
+    },
+    {
+      "id": "P1010",
+      "title": "Noise-Cancelling Earbuds",
+      "price": 99.99,
+      "image": "/images/earbuds.jpg",
+      "tags": ["audio", "wireless"],
+      "stockQty": 49,
+      "description": "Compact wireless earbuds featuring active noise cancellation and a secure, comfortable fit.",
+      "imageURL": "https://images.unsplash.com/photo-1662348316397-7afeb1045fd7?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=737"
+    },
+    {
+      "id": "P1011",
+      "title": "Portable Power Bank 10000mAh",
+      "price": 34.99,
+      "image": "/images/powerbank.jpg",
+      "tags": ["charging", "portable"],
+      "stockQty": 82,
+      "description": "Slim and powerful 10000mAh power bank with dual USB output and LED charge indicator.",
+      "imageURL": "https://images.unsplash.com/photo-1706275787520-541d385ae221?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=688"
+    },
+    {
+      "id": "P1012",
+      "title": "Smart LED Bulb",
+      "price": 14.99,
+      "image": "/images/smart-bulb.jpg",
+      "tags": ["lighting", "smart-home"],
+      "stockQty": 97,
+      "description": "Wi-Fi-enabled LED bulb with adjustable color temperature and smart app control compatibility.",
+      "imageURL": "https://images.unsplash.com/photo-1590845947698-8924d7409b56?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fFNtYXJ0JTIwTEVEJTIwQnVsYnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=500"
+    },
+    {
+      "id": "P1013",
+      "title": "Wireless Charger Pad",
+      "price": 19.99,
+      "image": "/images/wireless-charger.jpg",
+      "tags": ["charging", "wireless"],
+      "stockQty": 65,
+      "description": "Fast wireless charging pad compatible with Qi-enabled devices, featuring anti-slip coating.",
+      "imageURL": "https://images.unsplash.com/photo-1633381638729-27f730955c23?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170"
+    },
+    {
+      "id": "P1014",
+      "title": "HD Webcam 1080p",
+      "price": 49.99,
+      "image": "/images/webcam.jpg",
+      "tags": ["office", "electronics"],
+      "stockQty": 34,
+      "description": "High-definition webcam offering crisp 1080p video quality and built-in noise-reducing microphone.",
+      "imageURL": "https://images.unsplash.com/photo-1626581795188-8efb9a00eeec?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=735"
+    },
+    {
+      "id": "P1015",
+      "title": "External SSD 1TB",
+      "price": 119.99,
+      "image": "/images/ssd.jpg",
+      "tags": ["storage", "electronics"],
+      "stockQty": 40,
+      "description": "High-speed 1TB portable SSD with USB 3.2 interface and shock-resistant metal casing.",
+      "imageURL": "https://images.unsplash.com/photo-1577538926210-fc6cc624fde2?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170"
+    },
+    {
+      "id": "P1017",
+      "title": "Fitness Tracker Band",
+      "price": 49.99,
+      "image": "/images/fitness-tracker.jpg",
+      "tags": ["wearables", "fitness"],
+      "stockQty": 68,
+      "description": "Lightweight fitness tracker that monitors steps, sleep, and heart rate with a week-long battery life.",
+      "imageURL": "https://plus.unsplash.com/premium_photo-1681433386259-1ea114ca923d?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1460"
+    },
+    {
+      "id": "P1018",
+      "title": "Gaming Mouse Pad XL",
+      "price": 14.99,
+      "image": "/images/mousepad.jpg",
+      "tags": ["gaming", "accessories"],
+      "stockQty": 90,
+      "description": "Extra-large smooth-surface gaming mouse pad with stitched edges and non-slip rubber base.",
+      "imageURL": "https://images.unsplash.com/photo-1589401806207-2381455bce76?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170"
+    },
+    {
+      "id": "P1019",
+      "title": "Laptop Backpack",
+      "price": 59.99,
+      "image": "/images/backpack.jpg",
+      "tags": ["travel", "office"],
+      "stockQty": 54,
+      "description": "Water-resistant laptop backpack with multiple compartments and USB charging port for daily commuting.",
+      "imageURL": "https://images.unsplash.com/photo-1667411424771-cadd97150827?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170"
+    },
+    {
+      "id": "P1020",
+      "title": "Mini Tripod for Phone",
+      "price": 12.99,
+      "image": "/images/tripod.jpg",
+      "tags": ["photography", "accessories"],
+      "stockQty": 88,
+      "description": "Compact tripod with adjustable legs and phone mount — ideal for selfies, streaming, or travel photography.",
+      "imageURL": "https://images.unsplash.com/photo-1571253066662-32bf8be4135b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=728"
+    }
+  ]
+  
