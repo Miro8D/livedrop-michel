@@ -1,5 +1,5 @@
 import groundTruth from './ground-truth.json';
-import { getOrderStatus } from '../lib/api';
+import { fetchOrderStatus } from '../lib/api';
 
 const STOP_WORDS = new Set([
   'what','is','how','do','i','my','the','a','an','of','for','in','on','to','from','by','with','that','this','be','have','has','was','were','will','would','should','could','when','which','where','who','why','as','at','or','but','if','then','so','than','also','you','me'
@@ -64,7 +64,7 @@ export async function askSupport(query: string) {
   if (orderIds && orderIds.length > 0) {
     const orderId = orderIds[0];
     const masked = '****' + orderId.slice(-4);
-    const status = getOrderStatus(orderId);
+    const status = await fetchOrderStatus(orderId);
     return `Order ${masked} status: ${status.status}${status.carrier ? `, Carrier: ${status.carrier}` : ''}${status.eta ? `, ETA ${status.eta}` : ''}.`;
   }
 

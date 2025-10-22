@@ -42,6 +42,16 @@ const Header: React.FC = () => {
             >
               Cart
             </Link>
+            <Link
+              to="/admin"
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                isActive('/admin') 
+                  ? 'bg-slate-800 text-white shadow-lg font-bold' 
+                  : 'bg-slate-50 text-slate-700 hover:bg-slate-100 hover:text-slate-900'
+              }`}
+            >
+              Admin
+            </Link>
           </nav>
 
           {/* Mobile menu button */}

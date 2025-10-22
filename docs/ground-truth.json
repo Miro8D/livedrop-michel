@@ -1,0 +1,72 @@
+[
+  {
+    "id": "Account1.1",
+    "question": "How do I create an account on Shoplite?",
+    "answer": "You can create an account using your email and password, or sign up with Google/Facebook login. A verified email is required for confirmations and password resets.",
+    "category": "account",
+    "lastUpdated": "2025-10-01T00:00:00Z"
+  },
+  {
+    "id": "Payment2.1",
+    "question": "What payment methods does Shoplite support?",
+    "answer": "Shoplite accepts Visa, Mastercard, American Express, PayPal, and cash on delivery (COD in eligible regions). COD has a handling fee and is limited to orders under $200.",
+    "category": "payment",
+    "lastUpdated": "2025-10-01T00:00:00Z"
+  },
+  {
+    "id": "Shipping2.1",
+    "question": "How long does standard shipping take?",
+    "answer": "Standard shipping takes 5–7 business days. Express shipping takes 2–3 business days. Orders above $100 get free standard shipping.",
+    "category": "shipping",
+    "lastUpdated": "2025-10-01T00:00:00Z"
+  },
+  {
+    "id": "Cancellation3.1",
+    "question": "Can I cancel an order after it ships?",
+    "answer": "Orders can only be freely canceled during the Processing stage. Once shipped, cancellations are not guaranteed and require contacting customer support.",
+    "category": "orders",
+    "lastUpdated": "2025-10-01T00:00:00Z"
+  },
+  {
+    "id": "Returns3.2",
+    "question": "What is Shoplite’s return policy?",
+    "answer": "Returns are allowed within 30 days of delivery if items are unused, in original packaging, and with proof of purchase. Some items like perishable goods or digital downloads are not eligible. Refunds are processed within 7–10 business days.",
+    "category": "returns",
+    "lastUpdated": "2025-10-01T00:00:00Z"
+  },
+  {
+    "id": "Warranty4.1",
+    "question": "Do all products come with a warranty?",
+    "answer": "Not all, but many items do. Most warranties last 6–12 months and cover defects in materials or workmanship. They don’t cover misuse or accidents.",
+    "category": "warranty",
+    "lastUpdated": "2025-10-01T00:00:00Z"
+  },
+  {
+    "id": "Tracking4.2",
+    "question": "How do I track my order after purchase?",
+    "answer": "You can track order status from Processing → Shipped → Out for Delivery → Delivered in your account. Once shipped, you’ll also receive a courier tracking number.",
+    "category": "shipping",
+    "lastUpdated": "2025-10-01T00:00:00Z"
+  },
+  {
+    "id": "Privacy5.1",
+    "question": "How secure is my personal data on Shoplite?",
+    "answer": "Shoplite complies with GDPR, encrypts all data transfers, and lets users delete their accounts anytime. Payment details are never stored directly.",
+    "category": "privacy",
+    "lastUpdated": "2025-10-01T00:00:00Z"
+  },
+  {
+    "id": "Promotions6.1",
+    "question": "Does Shoplite offer student discounts?",
+    "answer": "Yes. Student discounts are sometimes offered through partner verification services.",
+    "category": "discounts",
+    "lastUpdated": "2025-10-01T00:00:00Z"
+  },
+  {
+    "id": "Environment7.1",
+    "question": "How does Shoplite contribute to the environment?",
+    "answer": "It uses recyclable packaging, eco-friendly couriers where possible, and offers 'green shipping' as a slower but sustainable delivery option.",
+    "category": "sustainability",
+    "lastUpdated": "2025-10-01T00:00:00Z"
+  }
+]

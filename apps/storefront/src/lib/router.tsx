@@ -6,6 +6,7 @@ import { askSupport } from '../assistant/engine';
 // Lazy load all pages except Catalog (entry point)
 import Catalog from '../pages/catalog';
 const Product = lazy(() => import('../pages/product'));
+const Admin = lazy(() => import('../pages/admin.tsx'));
 const Cart = lazy(() => import('../pages/cart'));
 const Checkout = lazy(() => import('../pages/checkout'));
 const OrderStatus = lazy(() => import('../pages/order-status'));
@@ -89,6 +90,7 @@ export default function AppRouter() {
             <Routes>
               <Route path="/" element={<Catalog />} />
               <Route path="/p/:id" element={<Product />} />
+              <Route path="/admin" element={<Admin />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/order/:id" element={<OrderStatus />} />

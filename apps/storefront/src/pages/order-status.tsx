@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { getOrderStatus } from "../lib/api";
+import { fetchOrderStatus } from "../lib/api";
+import { connectOrderStatus } from "../lib/sse-client";
 
 type OrderStatus = {
   id: string;
@@ -20,21 +21,52 @@ const OrderStatusPage: React.FC = () => {
       navigate('/');
       return;
     }
-    
-    // Get initial status
-    setOrder(getOrderStatus(id) as OrderStatus);
-    setLoading(false);
+    let conn: any | null = null;
 
-    // Poll for updates every 30 seconds
-    const interval = setInterval(() => {
-      setOrder(getOrderStatus(id) as OrderStatus);
-    }, 30000);
+    // Fetch initial status
+    (async () => {
+      setLoading(true);
+      const initial = await fetchOrderStatus(id);
+      setOrder(initial as OrderStatus);
+      setLoading(false);
 
-    return () => clearInterval(interval);
+      // Connect SSE for live updates
+      conn = connectOrderStatus(id, {
+        onOpen: () => {
+          // nothing for now
+        },
+        onMessage: (data) => {
+          if (data && data.status) {
+            setOrder((prev) => ({ ...(prev as any), status: data.status, carrier: data.carrier ?? prev?.carrier ?? null, eta: data.eta ?? prev?.eta ?? null } as OrderStatus));
+          }
+        },
+        onClose: () => {
+          // closed by server
+        },
+        onError: (e) => console.error('SSE error', e)
+      });
+    })();
+
+    return () => {
+      if (conn && conn.close) conn.close();
+    };
   }, [id, navigate]);
 
   const steps = ["Placed", "Packed", "Shipped", "Delivered"];
-  const currentStep = order ? steps.indexOf(order.status) : -1;
+  // Normalize backend status values to the UI steps
+  const normalizeStatus = (s: string | undefined | null) => {
+    if (!s) return 'Placed';
+    const up = s.toString().toUpperCase();
+    if (up === 'PENDING') return 'Placed';
+    if (up === 'PROCESSING') return 'Packed';
+    if (up === 'SHIPPED') return 'Shipped';
+    if (up === 'DELIVERED') return 'Delivered';
+    // fallback: try to match
+    if (steps.includes(s)) return s as any;
+    return 'Placed';
+  };
+
+  const currentStep = order ? steps.indexOf(normalizeStatus(order.status as any)) : -1;
 
   if (loading) {
     return (
@@ -135,8 +167,17 @@ const OrderStatusPage: React.FC = () => {
                   </svg>
                 </div>
                 <div>
-                  <div className="font-medium text-slate-700">Status</div>
-                  <div className="text-slate-600">{order.status}</div>
+                  <div className="font-medium text-slate-700">What’s happening</div>
+                  <div className="text-slate-600">
+                    {(() => {
+                      const s = (order.status || '').toString().toUpperCase();
+                      if (s === 'PENDING' || s === 'PLACED') return 'Your order has been placed and will be processed soon.';
+                      if (s === 'PROCESSING' || s === 'PACKED') return `Your order is being prepared${order.carrier ? ` and will be handed to ${order.carrier}` : ''}.`;
+                      if (s === 'SHIPPED') return `Your order has been shipped${order.carrier ? ` via ${order.carrier}` : ''}${order.eta ? ` and is expected in ${order.eta}` : ''}.`;
+                      if (s === 'DELIVERED') return 'Your order has been delivered.';
+                      return `Current status: ${order.status}`;
+                    })()}
+                  </div>
                 </div>
               </div>
 

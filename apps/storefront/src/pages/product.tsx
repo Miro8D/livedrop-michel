@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useCartStore } from '../lib/store';
+import { getProduct, listProducts } from '../lib/api';
 
 type Product = {
   id: string;
@@ -24,18 +25,34 @@ const Product: React.FC = () => {
   const { add: addToCart } = useCartStore();
 
   useEffect(() => {
-    fetch("/mock-catalog.json")
-      .then((res) => res.json())
-      .then((data: Product[]) => {
-        setAllProducts(data);
-        const item = data.find((p) => p.id === id);
-        if (item) {
-          setProduct(item);
-        } else {
+    let mounted = true;
+    setLoading(true);
+    (async () => {
+      try {
+        const prod = await getProduct(id || '');
+        if (!mounted) return;
+        if (!prod) {
           setNotFound(true);
+          setLoading(false);
+          return;
         }
+        setProduct(prod as Product);
+
+        // fetch a page of products for related items (small page)
+        const pageRes = await listProducts(1, 50);
+        if (!mounted) return;
+        const items = pageRes?.items ?? pageRes ?? [];
+        setAllProducts(items as Product[]);
+      } catch (err) {
+        console.error('Error loading product:', err);
+        if (!mounted) return;
+        setNotFound(true);
+      } finally {
+        if (!mounted) return;
         setLoading(false);
-      });
+      }
+    })();
+    return () => { mounted = false; };
   }, [id]);
 
   // Find related products based on shared tags
@@ -72,7 +89,7 @@ const Product: React.FC = () => {
   return (
     <main className="w-full px-4 py-8 bg-transparent">
       <button
-        className="mb-6 inline-flex items-center px-4 py-2 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-300 backdrop-blur-sm border border-white/20"
+        className="mb-6 inline-flex items-center px-4 py-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-300 backdrop-blur-sm border border-slate-200"
         onClick={() => navigate(-1)}
       >
         <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -80,7 +97,7 @@ const Product: React.FC = () => {
         </svg>
         Back
       </button>
-      <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-8">
+  <div className="bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-200 p-8">
         <div className="flex flex-col lg:flex-row gap-12 items-start">
           <div className="w-full lg:w-96">
             <img
@@ -90,7 +107,7 @@ const Product: React.FC = () => {
             />
           </div>
           <section className="flex-1">
-            <h1 className="text-4xl font-bold text-white mb-4">{product.title}</h1>
+            <h1 className="text-4xl font-bold text-slate-800 mb-4">{product.title}</h1>
             <div className="text-3xl bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent font-bold mb-6">
               ${product.price.toFixed(2)}
             </div>
@@ -99,22 +116,22 @@ const Product: React.FC = () => {
               {product.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="px-3 py-1 bg-blue-500/30 text-blue-200 text-sm rounded-full font-medium backdrop-blur-sm border border-blue-400/30"
+                  className="px-3 py-1 bg-blue-50 text-blue-700 text-sm rounded-full font-medium backdrop-blur-sm border border-blue-100"
                 >
                   {tag}
                 </span>
               ))}
             </div>
           )}
-          <div className="mb-6 text-white/80 text-lg leading-relaxed">
+          <div className="mb-6 text-slate-700 text-lg leading-relaxed">
             {product.description || (
-              <span className="italic text-white/40">No description available.</span>
+              <span className="italic text-slate-400">No description available.</span>
             )}
           </div>
           {typeof product.stockQty === "number" && (
             <div className="mb-6 flex items-center">
               <div className={`w-3 h-3 rounded-full mr-2 ${product.stockQty > 0 ? 'bg-green-400' : 'bg-red-400'}`}></div>
-              <span className="text-sm text-white/70">
+              <span className="text-sm text-grey-700">
                 {product.stockQty > 0 ? `In stock: ${product.stockQty} units` : 'Out of stock'}
               </span>
             </div>
@@ -163,15 +180,15 @@ const Product: React.FC = () => {
       {/* Related Products Section */}
       {relatedProducts.length > 0 && (
         <section className="mt-16">
-          <h2 className="text-3xl font-bold text-white mb-8 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">You might also like</h2>
+          <h2 className="text-3xl font-bold mb-8 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">You might also like</h2>
           <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 w-full space-y-6">
             {relatedProducts.map((relatedProduct) => (
               <Link
                 key={relatedProduct.id}
                 to={`/p/${relatedProduct.id}`}
-                className="group bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl hover:shadow-blue-500/25 transition-all duration-500 border border-white/20 hover:border-blue-400/50 overflow-hidden hover:scale-105 break-inside-avoid mb-6 block"
+                className="group bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl hover:shadow-blue-500/25 transition-all duration-500 border border-slate-200 hover:border-blue-400/50 overflow-hidden hover:scale-105 mb-6 block"
               >
-                <div className="relative overflow-hidden bg-gradient-to-br from-blue-500/20 to-cyan-500/20">
+                  <div className="relative overflow-hidden bg-slate-50">
                   <img
                     src={relatedProduct.imageURL || relatedProduct.image}
                     alt={relatedProduct.title}
@@ -180,8 +197,8 @@ const Product: React.FC = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-blue-900/40 via-transparent to-transparent group-hover:from-blue-900/60 transition-all duration-500"></div>
                 </div>
-                <div className="p-4 flex-1 flex flex-col">
-                  <h3 className="text-lg font-semibold text-white group-hover:text-blue-300 transition-colors mb-2">
+                  <div className="p-4 flex-1 flex flex-col">
+                  <h3 className="text-lg font-semibold text-slate-800 group-hover:text-blue-600 transition-colors mb-2">
                     {relatedProduct.title}
                   </h3>
                   <div className="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-3">
@@ -190,7 +207,7 @@ const Product: React.FC = () => {
                   {relatedProduct.tags && (
                     <div className="mt-2 flex flex-wrap gap-1">
                       {relatedProduct.tags.slice(0, 2).map((tag) => (
-                        <span key={tag} className="px-2 py-1 bg-blue-500/30 text-blue-200 text-xs rounded-full font-medium backdrop-blur-sm border border-blue-400/30">
+                        <span key={tag} className="px-2 py-1 bg-blue-500/30 text-xs rounded-full font-medium backdrop-blur-sm border border-blue-400/30">
                           {tag}
                         </span>
                       ))}

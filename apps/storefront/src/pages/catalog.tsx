@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useCartStore } from '../lib/store';
 import LazyImage from "../components/atoms/LazyImage";
+import { listProducts } from '../lib/api';
 
 // Product type based on mock-catalog.json shape
 type Product = {
@@ -20,27 +21,35 @@ type SortOption = 'price-asc' | 'price-desc' | 'name-asc' | 'name-desc';
 const Catalog: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [total, setTotal] = useState<number>(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTag, setSelectedTag] = useState('');
   const [sortBy, setSortBy] = useState<SortOption>('name-asc');
   const { add: addToCart } = useCartStore();
 
   useEffect(() => {
-    fetch("/mock-catalog.json")
-      .then((res) => {
-        console.log('Fetch response:', res);
-        return res.json();
+    let mounted = true;
+    setLoading(true);
+    listProducts(page, 10)
+      .then((res: any) => {
+        if (!mounted) return;
+        setProducts(Array.isArray(res) ? res : res.items ?? []);
+        setTotal(res.total ?? (res.items ? res.items.length : 0));
+        setTotalPages(res.totalPages ?? 1);
       })
-      .then((data) => {
-        console.log('Fetched data:', data);
-        setProducts(data);
-        setLoading(false);
+      .catch((err) => {
+        console.error('Error loading products:', err);
+        if (!mounted) return;
+        setProducts([]);
       })
-      .catch((error) => {
-        console.error('Error fetching catalog:', error);
+      .finally(() => {
+        if (!mounted) return;
         setLoading(false);
       });
-  }, []);
+    return () => { mounted = false; };
+  }, [page]);
 
   // Get unique tags for filter dropdown
   const allTags = useMemo(() => {
@@ -143,72 +152,132 @@ const Catalog: React.FC = () => {
         </div>
         
         {/* Results Summary */}
-        <div className="text-sm text-slate-600 mt-4">
-          Showing {filteredAndSortedProducts.length} of {products.length} products
-          {searchTerm && (
-            <span> for "{searchTerm}"</span>
-          )}
-          {selectedTag && (
-            <span> in {selectedTag}</span>
-          )}
+        <div className="text-sm text-slate-600 mt-4 flex items-center justify-between">
+          <div>
+            Showing {filteredAndSortedProducts.length} of {total} products
+            {searchTerm && (
+              <span> for "{searchTerm}"</span>
+            )}
+            {selectedTag && (
+              <span> in {selectedTag}</span>
+            )}
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setPage(1)}
+              disabled={page <= 1}
+              className="px-2 py-1 bg-white border rounded-lg disabled:opacity-50"
+            >First</button>
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page <= 1}
+              className="px-2 py-1 bg-white border rounded-lg disabled:opacity-50"
+            >Prev</button>
+
+            {/* Numbered pager (windowed) */}
+            <div className="flex items-center gap-1">
+              {(() => {
+                const range = 7; // max visible page buttons
+                let start = Math.max(1, page - Math.floor(range / 2));
+                let end = Math.min(totalPages, start + range - 1);
+                if (end - start + 1 < range) {
+                  start = Math.max(1, end - range + 1);
+                }
+                const buttons: any[] = [];
+                if (start > 1) {
+                  buttons.push(<button key="lead-ellipsis" className="px-2 py-1">...</button>);
+                }
+                for (let i = start; i <= end; i++) {
+                  buttons.push(
+                    <button
+                      key={i}
+                      onClick={() => setPage(i)}
+                      aria-current={i === page ? 'page' : undefined}
+                      className={`px-3 py-1 border rounded-lg ${i === page ? 'bg-blue-600 text-white' : 'bg-white'}`}
+                    >
+                      {i}
+                    </button>
+                  );
+                }
+                if (end < totalPages) {
+                  buttons.push(<button key="trail-ellipsis" className="px-2 py-1">...</button>);
+                }
+                return buttons;
+              })()}
+            </div>
+
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page >= totalPages}
+              className="px-2 py-1 bg-white border rounded-lg disabled:opacity-50"
+            >Next</button>
+            <button
+              onClick={() => setPage(totalPages)}
+              disabled={page >= totalPages}
+              className="px-2 py-1 bg-white border rounded-lg disabled:opacity-50"
+            >Last</button>
+          </div>
         </div>
       </div>
       
-      <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 2xl:columns-5 gap-6 w-full space-y-6">
+      {/* Use a wrapping flex layout so cards size themselves without leaving gaps */}
+      <div className="flex flex-wrap -m-3 w-full">
         {filteredAndSortedProducts.map((product) => (
-          <div key={product.id} className="group bg-white/80 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-blue-500/25 transition-all duration-500 border border-slate-200 hover:border-blue-400/50 overflow-hidden hover:scale-105 break-inside-avoid mb-6">
-            <Link to={`/p/${product.id}`}>
-              <div className="relative overflow-hidden bg-slate-50">
-                <LazyImage
-                  src={product.imageURL || product.image}
-                  alt={product.title}
-                  className="w-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  width={300}
-                  height={300}
-                  fetchPriority="low"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
+          <div key={product.id} className="p-3 w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 2xl:w-1/5">
+            <div className="group h-full bg-white/80 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-blue-500/25 transition-all duration-500 border border-slate-200 hover:border-blue-400/50 overflow-hidden hover:scale-105 flex flex-col">
+              <Link to={`/p/${product.id}`} className="flex-shrink-0">
+                <div className="relative overflow-hidden bg-slate-50">
+                  <LazyImage
+                    src={product.imageURL || product.image}
+                    alt={product.title}
+                    className="w-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    width={300}
+                    height={300}
+                    fetchPriority="low"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/20 via-transparent to-transparent group-hover:from-slate-900/30 transition-all duration-500"></div>
+                </div>
+                <div className="p-6 flex-1 flex flex-col">
+                  <h2 className="text-lg font-semibold text-slate-800 group-hover:text-blue-600 transition-colors mb-2">{product.title}</h2>
+                  <div className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-700 bg-clip-text text-transparent mb-3">${product.price.toFixed(2)}</div>
+                  {product.tags && (
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      {product.tags.map((tag) => (
+                        <span key={tag} className="px-3 py-1 bg-blue-50 text-blue-600 text-xs rounded-full font-medium border border-blue-200">{tag}</span>
+                      ))}
+                    </div>
+                  )}
+                  {typeof product.stockQty === "number" && (
+                    <div className="mt-2 text-xs text-slate-500">
+                      In stock: {product.stockQty}
+                    </div>
+                  )}
+                </div>
+              </Link>
+              <div className="px-6 pb-6 mt-auto">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (product.stockQty !== 0) {
+                      addToCart({
+                        id: product.id,
+                        title: product.title,
+                        price: product.price,
+                        image: product.imageURL || product.image,
+                        qty: 1
+                      });
+                    }
                   }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/20 via-transparent to-transparent group-hover:from-slate-900/30 transition-all duration-500"></div>
+                  disabled={product.stockQty === 0}
+                  className="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-blue-500/25"
+                >
+                  {product.stockQty === 0 ? "Out of Stock" : "Quick Add to Cart"}
+                </button>
               </div>
-              <div className="p-6 flex-1 flex flex-col">
-                <h2 className="text-lg font-semibold text-slate-800 group-hover:text-blue-600 transition-colors mb-2">{product.title}</h2>
-                <div className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-700 bg-clip-text text-transparent mb-3">${product.price.toFixed(2)}</div>
-                {product.tags && (
-                  <div className="mt-2 flex flex-wrap gap-1">
-                    {product.tags.map((tag) => (
-                      <span key={tag} className="px-3 py-1 bg-blue-50 text-blue-600 text-xs rounded-full font-medium border border-blue-200">{tag}</span>
-                    ))}
-                  </div>
-                )}
-                {typeof product.stockQty === "number" && (
-                  <div className="mt-2 text-xs text-slate-500">
-                    In stock: {product.stockQty}
-                  </div>
-                )}
-              </div>
-            </Link>
-            <div className="px-6 pb-6">
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (product.stockQty !== 0) {
-                    addToCart({
-                      id: product.id,
-                      title: product.title,
-                      price: product.price,
-                      image: product.imageURL || product.image,
-                      qty: 1
-                    });
-                  }
-                }}
-                disabled={product.stockQty === 0}
-                className="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-blue-500/25"
-              >
-                {product.stockQty === 0 ? "Out of Stock" : "Quick Add to Cart"}
-              </button>
             </div>
           </div>
         ))}
