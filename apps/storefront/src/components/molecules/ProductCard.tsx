@@ -1,4 +1,3 @@
-import React from 'react';
 import LazyImage from '../atoms/LazyImage';
 import { formatCurrency } from '../../lib/format';
 
