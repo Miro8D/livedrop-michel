@@ -1,4 +1,5 @@
 import express from "express";
+import { pingLLM } from '../assistant/engine.js';
 import { connectDB } from "../db.js";
 import { performanceStats } from "../server.js";
 
@@ -65,11 +66,46 @@ router.get("/performance", async (req, res) => {
       recentLatencySamples: latencies.slice(-10).map(n => Number(n.toFixed(2))),
       activeSSEConnections: performanceStats.sseConnections,
       averageLLMResponseMs: Number(avgLLMResponse.toFixed(2)),
+      llm: { up: false, lastLatencyMs: null },
       timestamp: new Date()
     });
   } catch (err) {
     console.error("Error fetching performance data:", err);
     res.status(500).json({ error: "Failed to fetch performance data" });
+  }
+});
+
+// Optionally check LLM ping when requested
+router.get('/performance/with-llm', async (req, res) => {
+  try {
+    const base = await router.handle ? true : true; // noop to keep structure
+    const perfRes = await (async () => {
+      const latencies = performanceStats.latencies;
+      const avgLatency = latencies.length > 0 ? latencies.reduce((a, b) => a + b, 0) / latencies.length : 0;
+      const avgLLMResponse = performanceStats.llmResponseTimes.length > 0 ? performanceStats.llmResponseTimes.reduce((a, b) => a + b, 0) / performanceStats.llmResponseTimes.length : 0;
+      return {
+        totalRequests: performanceStats.totalRequests,
+        failedRequests: performanceStats.failedRequests,
+        averageLatencyMs: Number(avgLatency.toFixed(2)),
+        recentLatencySamples: latencies.slice(-10).map(n => Number(n.toFixed(2))),
+        activeSSEConnections: performanceStats.sseConnections,
+        averageLLMResponseMs: Number(avgLLMResponse.toFixed(2)),
+        timestamp: new Date()
+      };
+    })();
+
+    const result = { ...perfRes, llm: { up: false, lastLatencyMs: null } };
+    try {
+      const llm = await pingLLM();
+      result.llm = { up: !!llm.up, lastLatencyMs: llm.latencyMs ?? null };
+    } catch (err) {
+      result.llm = { up: false, lastLatencyMs: null };
+    }
+
+    res.json(result);
+  } catch (err) {
+    console.error('Error fetching performance+llm data', err);
+    res.status(500).json({ error: 'Failed to fetch perf with llm' });
   }
 });
 

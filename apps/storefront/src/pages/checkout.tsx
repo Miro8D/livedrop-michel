@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCartStore } from "../lib/store";
 import { formatCurrency } from "../lib/format";
-import { placeOrder } from "../lib/api";
+import { placeOrder, createCustomer } from "../lib/api";
 
 interface CustomerInfo {
   name: string;
@@ -63,6 +63,14 @@ const Checkout: React.FC = () => {
 
     setIsSubmitting(true);
     try {
+      // Ensure customer info is stored in backend before placing order
+      await createCustomer({
+        email: customerInfo.email,
+        name: customerInfo.name,
+        phone: customerInfo.phone,
+        address: `${customerInfo.address} ${customerInfo.city} ${customerInfo.zip}`.trim()
+      });
+
       // Place order through API
       const { orderId } = await placeOrder(items, customerInfo);
       clear(); // Clear cart after successful order

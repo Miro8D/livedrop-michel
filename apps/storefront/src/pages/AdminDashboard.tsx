@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { getBusinessMetrics, getPerformanceMetrics, getAssistantStats, getDailyRevenue } from '../lib/api';
+import { getBusinessMetrics, getPerformanceWithLLM, getAssistantStats, getDailyRevenue } from '../lib/api';
 
 function formatCurrency(n: number) {
   return `$${(n || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -60,7 +60,7 @@ export default function Admin() {
 
   async function fetchAll() {
     try {
-      const [b, p, a] = await Promise.all([getBusinessMetrics(), getPerformanceMetrics(), getAssistantStats()]);
+      const [b, p, a] = await Promise.all([getBusinessMetrics(), getPerformanceWithLLM(), getAssistantStats()]);
       if (mounted.current) {
         setBusiness(b);
         setPerformance(p);
@@ -151,7 +151,15 @@ export default function Admin() {
           </div>
           <div className="p-3 border rounded">
                 <div className="text-sm text-slate-500">LLM Service</div>
-                <div className="mt-2 font-medium">{performance ? (performance.averageLLMResponseMs && performance.averageLLMResponseMs > 0 ? 'Up' : 'Unknown') : '—'}</div>
+                <div className="mt-2 font-medium">
+                  {performance ? (
+                    performance.llm ? (
+                      performance.llm.up ? `Up (${performance.llm.lastLatencyMs ?? 'n/a'} ms)` : 'Down'
+                    ) : (
+                      performance.averageLLMResponseMs && performance.averageLLMResponseMs > 0 ? `${performance.averageLLMResponseMs} ms` : 'Unknown'
+                    )
+                  ) : '—'}
+                </div>
           </div>
           <div className="p-3 border rounded">
             <div className="text-sm text-slate-500">Last updated</div>

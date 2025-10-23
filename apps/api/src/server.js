@@ -44,6 +44,16 @@ app.use((req, res, next) => {
 });
 
 export { performanceStats };
+// Dynamically import assistant route after performanceStats is initialized to avoid
+// a circular import between server.js and assistant/engine.js
+let assistantRoute;
+try {
+  const mod = await import('./assistant/engine.js');
+  assistantRoute = mod.default;
+  if (mod.setPerformanceStats) mod.setPerformanceStats(performanceStats);
+} catch (e) {
+  console.warn('Could not load assistant router at startup:', e && e.message ? e.message : e);
+}
 
 app.use("/api/products", productsRoute);
 app.use("/api/orders", ordersRoute);
@@ -51,6 +61,7 @@ app.use("/api/customers", customersRoute);
 app.use("/api/analytics", analyticsRoute);
 app.use("/api/dashboard", dashboardRoute);
 app.use("/api/orders", orderStatusSseRouter);
+if (assistantRoute) app.use('/api/assistant', assistantRoute);
 
 app.get('/', (req, res) => res.send('API running'));
 app.listen(5000, () => console.log('Server running on port 5000'));

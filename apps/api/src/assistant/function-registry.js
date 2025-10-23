@@ -1,4 +1,4 @@
-import { getDb } from "../db.js";
+import { connectDB } from "../db.js";
 
 class FunctionRegistry {
   constructor() {
@@ -34,7 +34,7 @@ registry.register(
     }
   },
   async ({ orderId }) => {
-    const db = getDb();
+    const db = await connectDB();
     const orders = db.collection("orders");
     const order = await orders.findOne({ _id: orderId });
     if (!order) return { error: "Order not found" };
@@ -52,7 +52,7 @@ registry.register(
     }
   },
   async ({ query, limit = 5 }) => {
-    const db = getDb();
+    const db = await connectDB();
     const products = db.collection("products");
     const results = await products
       .find({ name: { $regex: query, $options: "i" } })
@@ -71,7 +71,7 @@ registry.register(
     }
   },
   async ({ email }) => {
-    const db = getDb();
+    const db = await connectDB();
     const customers = db.collection("customers");
     const orders = db.collection("orders");
     const customer = await customers.findOne({ email });

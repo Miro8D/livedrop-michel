@@ -137,6 +137,17 @@ export async function getCustomerById(id: string) {
   }
 }
 
+// Create or update a customer record on the backend
+export async function createCustomer(payload: { email: string; name?: string; phone?: string; address?: string }) {
+  if (!API_BASE) return null;
+  try {
+    const res = await fetchJson('/api/customers', { method: 'POST', body: JSON.stringify(payload) });
+    return res || null;
+  } catch (err) {
+    return null;
+  }
+}
+
 // Product creation (admin)
 export async function createProduct(payload: any) {
   if (!API_BASE) throw new Error('No API base');
@@ -205,10 +216,30 @@ export async function getPerformanceMetrics() {
   }
 }
 
+export async function getPerformanceWithLLM() {
+  try {
+    if (!API_BASE) return null;
+    const res = await fetchJson('/api/dashboard/performance/with-llm');
+    return res || null;
+  } catch (err) {
+    return null;
+  }
+}
+
 export async function getAssistantStats() {
   try {
     if (!API_BASE) return null;
     const res = await fetchJson('/api/dashboard/assistant-stats');
+    return res || null;
+  } catch (err) {
+    return null;
+  }
+}
+
+export async function askAssistant(query: string) {
+  try {
+    if (!API_BASE) return null;
+    const res = await fetchJson('/api/assistant/query', { method: 'POST', body: JSON.stringify({ query }) });
     return res || null;
   } catch (err) {
     return null;
