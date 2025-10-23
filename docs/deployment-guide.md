@@ -2,6 +2,10 @@
 
 This document explains how to deploy and run the Shoplite system, including the database, backend API, frontend interface, and the LLM service.
 
+The project can be visited [here](https://livedrop-michel.vercel.app/)
+
+The API is hosted on https://livedrop-l0el.onrender.com/
+
 ---
 
 ## 1. MongoDB Atlas Setup
