@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Header } from '../components';
 import { lazy, Suspense, useEffect } from 'react';
 import SupportAssistant from '../components/organisms/SupportAssistant';
@@ -54,7 +54,7 @@ function RouteTracker() {
 export default function AppRouter() {
   // SupportAssistant component handles support UI and interactions
   return (
-    <BrowserRouter>
+    <HashRouter>
       <RouteTracker />
       <div className="min-h-screen w-full bg-gradient-to-b from-white via-sky-50 to-blue-100 text-slate-800">
         <Header />
@@ -73,6 +73,6 @@ export default function AppRouter() {
 
         <SupportAssistant />
       </div>
-    </BrowserRouter>
+    </HashRouter>
   );
 }

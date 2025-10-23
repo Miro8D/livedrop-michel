@@ -13,7 +13,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-await connectDB();
+// Only auto-connect to the DB and start listening when not in test mode.
+// Tests should import the app directly and manage DB connectivity.
+if (process.env.NODE_ENV !== 'test') {
+  await connectDB();
+}
 
 // Track request times
 const performanceStats = {
@@ -64,4 +68,8 @@ app.use("/api/orders", orderStatusSseRouter);
 if (assistantRoute) app.use('/api/assistant', assistantRoute);
 
 app.get('/', (req, res) => res.send('API running'));
-app.listen(5000, () => console.log('Server running on port 5000'));
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(5000, () => console.log('Server running on port 5000'));
+}
+
+export default app;
